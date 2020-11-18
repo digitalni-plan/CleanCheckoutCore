@@ -19,7 +19,7 @@ define([
             initialize: function () {
                 this.checkDelay = 500;
                 return this._super();
-            }
+            },
 
             /**
              * Initializes observable properties of instance
