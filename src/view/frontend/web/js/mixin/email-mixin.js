@@ -14,6 +14,14 @@ define([
             formNextStepSelector: '#checkoutSteps form.form-next-step',
 
             /**
+             * Reduce form delay when checking if entered email already exists.
+             */
+            initialize: function () {
+                this.checkDelay = 500;
+                return this._super();
+            }
+
+            /**
              * Initializes observable properties of instance
              *
              * @returns {Object} Chainable.
