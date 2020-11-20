@@ -3,9 +3,11 @@
  * See LICENSE.txt for license details.
  */
 define([
-    'jquery'
+    'jquery',
+    'Magento_Checkout/js/checkout-data',
 ], function (
-    $
+    $,
+    checkoutData
 ) {
     'use strict';
 
@@ -28,24 +30,24 @@ define([
                 this._super()
                     .observe([
                         'isRegisterButtonVisible',
-                        'isLoginButtonVisible',
-                        'isGuestButtonVisible'
+                        'isGuestButtonVisible',
+                        'isNextButtonVisible'
                     ]);
 
                 this.email.subscribe(this.emailAddressChanged, this);
                 this.isPasswordVisible.subscribe(this.haveAccountChanged, this);
-
-                var haveAccount = Boolean(this.resolveInitialPasswordVisibility());
-                this.isRegisterButtonVisible(!haveAccount);
-                this.isGuestButtonVisible(!haveAccount);
-                this.isLoginButtonVisible(haveAccount);
-
+                this.isNextButtonVisible(this.isPasswordVisible() === false);
                 return this;
+            },
+
+            nextAction: function () {
+                this.emailAddressChanged(this.email());
             },
 
             emailAddressChanged: function (email) {
                 this.isRegisterButtonVisible(this.validateEmail());
                 this.isGuestButtonVisible(this.validateEmail());
+                this.isNextButtonVisible(false);
             },
 
             haveAccountChanged: function (haveAccount) {
@@ -53,8 +55,8 @@ define([
                 if (haveAccount) {
                     this.isRegisterButtonVisible(false);
                     this.isGuestButtonVisible(false);
+                    this.isNextButtonVisible(false);
                 }
-                this.isLoginButtonVisible(haveAccount);
             }
         });
     }
