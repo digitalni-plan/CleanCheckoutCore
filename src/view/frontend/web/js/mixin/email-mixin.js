@@ -11,8 +11,6 @@ define([
 
     return function (target) {
         return target.extend({
-            formNextStepSelector: '#checkoutSteps form.form-next-step',
-
             /**
              * Reduce form delay when checking if entered email already exists.
              */
@@ -30,7 +28,8 @@ define([
                 this._super()
                     .observe([
                         'isRegisterButtonVisible',
-                        'isLoginButtonVisible'
+                        'isLoginButtonVisible',
+                        'isGuestButtonVisible'
                     ]);
 
                 this.email.subscribe(this.emailAddressChanged, this);
@@ -38,33 +37,24 @@ define([
 
                 var haveAccount = Boolean(this.resolveInitialPasswordVisibility());
                 this.isRegisterButtonVisible(!haveAccount);
+                this.isGuestButtonVisible(!haveAccount);
                 this.isLoginButtonVisible(haveAccount);
-                this.displayFormNavigateToNextStep(!haveAccount);
 
                 return this;
             },
 
             emailAddressChanged: function (email) {
                 this.isRegisterButtonVisible(this.validateEmail());
-                this.displayFormNavigateToNextStep(this.validateEmail());
+                this.isGuestButtonVisible(this.validateEmail());
             },
 
             haveAccountChanged: function (haveAccount) {
                 haveAccount = Boolean(haveAccount);
                 if (haveAccount) {
                     this.isRegisterButtonVisible(false);
-                    this.displayFormNavigateToNextStep(false);
+                    this.isGuestButtonVisible(false);
                 }
                 this.isLoginButtonVisible(haveAccount);
-            },
-
-            displayFormNavigateToNextStep: function (value) {
-                var formNextStep = $(this.formNextStepSelector);
-                if (value) {
-                    formNextStep.show();
-                } else {
-                    formNextStep.hide();
-                }
             }
         });
     }
