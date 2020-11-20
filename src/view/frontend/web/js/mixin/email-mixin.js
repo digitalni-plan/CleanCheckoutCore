@@ -4,10 +4,10 @@
  */
 define([
     'jquery',
-    'Magento_Checkout/js/checkout-data',
+    'Magento_Checkout/js/model/step-navigator',
 ], function (
     $,
-    checkoutData
+    stepNavigator
 ) {
     'use strict';
 
@@ -42,6 +42,10 @@ define([
 
             nextAction: function () {
                 this.emailAddressChanged(this.email());
+            },
+
+            continueAsGuest: function () {
+                stepNavigator.next();
             },
 
             emailAddressChanged: function (email) {
