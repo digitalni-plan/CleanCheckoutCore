@@ -7,11 +7,13 @@ define([
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Customer/js/action/check-email-availability',
     'Magento_Checkout/js/checkout-data',
+    'Magento_Checkout/js/model/quote'
 ], function (
     $,
     stepNavigator,
     checkEmailAvailability,
-    checkoutData
+    checkoutData,
+    quote
 ) {
     'use strict';
 
@@ -22,7 +24,6 @@ define([
                     email: ''
                 }
             },
-
 
             /**
              * Reduce form delay when checking if entered email already exists.
@@ -57,26 +58,17 @@ define([
             },
 
             nextAction: function () {
-                // this.emailAddressChanged(this.email());
-
                 if (this.validateEmail()) {
-                    // this.isEmailInvalid(false);
                     this.checkEmailAvailability();
+                    quote.guestEmail = this.email();
+                    checkoutData.setValidatedEmailValue(this.email());
+                    checkoutData.setInputFieldEmailValue(this.email());
                 } else {
                     this.isEmailInvalid(false);
                     this.isEmailInvalid(true);
                     this.updateButtons();
                 }
-
-
-
-
             },
-
-            // emailHasChanged: function () {
-            //
-            // },
-
 
             checkEmailAvailability: function () {
                 this.validateRequest();
@@ -109,7 +101,6 @@ define([
             },
 
             updateButtons: function () {
-
                 if (this.validateEmail()) {
                     this.isEmailInputEnabled(false);
                     this.isNextButtonVisible(false);
@@ -123,37 +114,15 @@ define([
                     return;
                 }
 
-
                 if (this.isPasswordVisible()) {
-                    console.log('isPasswordVisible = true');
                     this.isEmailInputEnabled(false);
                     this.isNextButtonVisible(false);
                     this.isRegisterButtonVisible(false);
                     this.isGuestButtonVisible(false);
                     return;
                 }
-
-
-
-
-
             }
 
-            // emailAddressChanged: function (email) {
-            //     this.isRegisterButtonVisible(this.validateEmail());
-            //     this.isGuestButtonVisible(this.validateEmail());
-            //     this.isNextButtonVisible(false);
-            // },
-            //
-            // haveAccountChanged: function (haveAccount) {
-            //     haveAccount = Boolean(haveAccount);
-            //     console.log("haveAccount", haveAccount);
-            //     if (haveAccount) {
-            //         this.isRegisterButtonVisible(false);
-            //         this.isGuestButtonVisible(false);
-            //         this.isNextButtonVisible(false);
-            //     }
-            // }
         });
     }
 });
