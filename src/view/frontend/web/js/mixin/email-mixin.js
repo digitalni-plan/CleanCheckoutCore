@@ -17,6 +17,13 @@ define([
 
     return function (target) {
         return target.extend({
+            defaults: {
+                listens: {
+                    email: ''
+                }
+            },
+
+
             /**
              * Reduce form delay when checking if entered email already exists.
              */
