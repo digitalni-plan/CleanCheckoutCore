@@ -7,13 +7,15 @@ define([
     'Magento_Checkout/js/model/step-navigator',
     'Magento_Customer/js/action/check-email-availability',
     'Magento_Checkout/js/checkout-data',
-    'Magento_Checkout/js/model/quote'
+    'Magento_Checkout/js/model/quote',
+    'mage/url'
 ], function (
     $,
     stepNavigator,
     checkEmailAvailability,
     checkoutData,
-    quote
+    quote,
+    urlBuilder
 ) {
     'use strict';
 
@@ -68,6 +70,10 @@ define([
                     this.isEmailInvalid(true);
                     this.updateButtons();
                 }
+            },
+
+            proceedToRegistration: function() {
+                window.location.href = urlBuilder.build('customer/account/create');
             },
 
             checkEmailAvailability: function () {
