@@ -8,6 +8,7 @@ define([
     'Magento_Customer/js/action/check-email-availability',
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/quote',
+    'Magento_Customer/js/model/customer',
     'mage/url'
 ], function (
     $,
@@ -15,6 +16,7 @@ define([
     checkEmailAvailability,
     checkoutData,
     quote,
+    customer,
     urlBuilder
 ) {
     'use strict';
@@ -50,8 +52,12 @@ define([
                         'isEmailInvalid'
                     ]);
 
-                this.isEmailInputEnabled(true);
+                this.isEmailInputEnabled(!customer.isLoggedIn());
                 this.isEmailInvalid(false);
+
+                if (customer.isLoggedIn() && window.customerData.email) {
+                    this.email(window.customerData.email);
+                }
 
                 //this.email.subscribe(this.emailAddressChanged, this);
                 // this.isPasswordVisible.subscribe(this.haveAccountChanged, this);
@@ -60,6 +66,12 @@ define([
             },
 
             nextAction: function () {
+
+                if (customer.isLoggedIn()) {
+                    stepNavigator.next();
+                    return;
+                }
+
                 if (this.validateEmail()) {
                     this.checkEmailAvailability();
                     quote.guestEmail = this.email();
@@ -99,6 +111,10 @@ define([
             },
 
             allowEmailInput: function () {
+                if (customer.isLoggedIn()) {
+                    window.location.href = urlBuilder.build('customer/account/logout');
+                    return;
+                }
                 this.isEmailInputEnabled(true);
                 this.isPasswordVisible(false);
                 this.isNextButtonVisible(true);
