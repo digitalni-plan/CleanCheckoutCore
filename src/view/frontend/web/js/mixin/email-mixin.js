@@ -9,6 +9,7 @@ define([
     'Magento_Checkout/js/checkout-data',
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
+    'Magento_Customer/js/action/login',
     'mage/url'
 ], function (
     $,
@@ -17,6 +18,7 @@ define([
     checkoutData,
     quote,
     customer,
+    loginAction,
     urlBuilder
 ) {
     'use strict';
@@ -63,6 +65,22 @@ define([
                 // this.isPasswordVisible.subscribe(this.haveAccountChanged, this);
                 this.isNextButtonVisible(this.isPasswordVisible() === false);
                 return this;
+            },
+
+            login: function (loginForm) {
+                var loginData = {},
+                    formDataArray = $(loginForm).serializeArray();
+
+                formDataArray.forEach(function (entry) {
+                    loginData[entry.name] = entry.value;
+                });
+
+                if (this.isPasswordVisible() && $(loginForm).validation() && $(loginForm).validation('isValid')) {
+                    fullScreenLoader.startLoader();
+                    loginAction(loginData, window.checkoutConfig.checkoutUrl).always(function () {
+                        fullScreenLoader.stopLoader();
+                    });
+                }
             },
 
             nextAction: function () {
