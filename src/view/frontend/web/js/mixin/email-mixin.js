@@ -10,7 +10,8 @@ define([
     'Magento_Checkout/js/model/quote',
     'Magento_Customer/js/model/customer',
     'Magento_Customer/js/action/login',
-    'mage/url'
+    'mage/url',
+    'Magento_Checkout/js/model/full-screen-loader'
 ], function (
     $,
     stepNavigator,
@@ -19,7 +20,8 @@ define([
     quote,
     customer,
     loginAction,
-    urlBuilder
+    urlBuilder,
+    fullScreenLoader
 ) {
     'use strict';
 
