@@ -15,6 +15,7 @@ class ModifyCheckoutLayoutPlugin
     const CONFIG_DISABLE_FIELD_PATH    = 'clean_checkout/cleanup/disable_%s';
     const CONFIG_DISABLE_DISCOUNT_PATH = 'clean_checkout/cleanup/disable_discount';
     const CONFIG_MOVE_CART_ITEMS_PATH  = 'clean_checkout/general/move_cart_items';
+    const CONFIG_PATH_SEPARATE_VAT_FIELDS_PATH = 'clean_checkout/general/separate_vat_fields';
     const CONFIG_PATH_FIELD_ORDER_PATH = 'clean_checkout/field_order';
 
     /**
@@ -153,6 +154,43 @@ class ModifyCheckoutLayoutPlugin
     }
 
     /**
+     * Separate VAT fields from shipping address (VAT Number and company name) to separate fieldset.
+     *
+     * @param array $jsLayout
+     * @return array
+     */
+    private function separateVatFields($jsLayout)
+    {
+        if (!$this->scopeConfig->getValue(self::CONFIG_PATH_SEPARATE_VAT_FIELDS_PATH, ScopeInterface::SCOPE_STORE)) {
+            return $jsLayout;
+        }
+
+        $shippingAddressChildren = &$jsLayout['components']['checkout']['children']['steps']['children']['shipping-step']
+        ['children']['shippingAddress']['children']['shipping-address-fieldset']['children'];
+
+        $shippingAddressChildren['vat-information'] = [
+            'component' => 'Magento_Ui/js/form/components/fieldset',
+            'label' => 'koji je ovo',
+            'children' => []
+        ];
+        $vatInformationChildren = &$shippingAddressChildren['vat-information']['children'];
+
+        $moveFields = ['vat_id', 'company'];
+        foreach ($moveFields as $moveField) {
+
+            // Skip if field is not available
+            if (!isset($shippingAddressChildren[$moveField])) {
+                continue;
+            }
+
+            $vatInformationChildren[$moveField] = $shippingAddressChildren[$moveField];
+            unset($shippingAddressChildren[$moveField]);
+        }
+
+        return $jsLayout;
+    }
+
+    /**
      * @param LayoutProcessor $layoutProcessor
      * @param callable $proceed
      * @param array<int, mixed> $args
@@ -164,6 +202,7 @@ class ModifyCheckoutLayoutPlugin
 
         $jsLayout = $this->disableAuthentication($jsLayout);
         $jsLayout = $this->modifyShippingFields($jsLayout);
+        $jsLayout = $this->separateVatFields($jsLayout);
         $jsLayout = $this->modifyBillingFields($jsLayout);
         $jsLayout = $this->changeCartItemsSortOrder($jsLayout);
         $jsLayout = $this->disableDiscountComponent($jsLayout);
