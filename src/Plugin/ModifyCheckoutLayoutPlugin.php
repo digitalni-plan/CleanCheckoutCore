@@ -170,8 +170,9 @@ class ModifyCheckoutLayoutPlugin
 
         $shippingAddressChildren['vat-information'] = [
             'component' => 'Magento_Ui/js/form/components/fieldset',
-            'label' => __('Commercial invoice details'),
-            'children' => []
+            'name'      => 'vat-information',
+            'label'     => __('Commercial invoice details'),
+            'children'  => []
         ];
         $vatInformationChildren = &$shippingAddressChildren['vat-information']['children'];
 
