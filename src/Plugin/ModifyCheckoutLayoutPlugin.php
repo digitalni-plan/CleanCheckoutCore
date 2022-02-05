@@ -15,7 +15,7 @@ class ModifyCheckoutLayoutPlugin
     const CONFIG_DISABLE_FIELD_PATH    = 'clean_checkout/cleanup/disable_%s';
     const CONFIG_DISABLE_DISCOUNT_PATH = 'clean_checkout/cleanup/disable_discount';
     const CONFIG_MOVE_CART_ITEMS_PATH  = 'clean_checkout/general/move_cart_items';
-    const CONFIG_PATH_SEPARATE_VAT_FIELDS_PATH = 'clean_checkout/general/separate_vat_fields';
+    const CONFIG_SEPARATE_VAT_FIELDS_PATH = 'clean_checkout/general/separate_vat_fields';
     const CONFIG_PATH_FIELD_ORDER_PATH = 'clean_checkout/field_order';
 
     /**
@@ -161,7 +161,7 @@ class ModifyCheckoutLayoutPlugin
      */
     private function separateVatFields($jsLayout)
     {
-        if (!$this->scopeConfig->getValue(self::CONFIG_PATH_SEPARATE_VAT_FIELDS_PATH, ScopeInterface::SCOPE_STORE)) {
+        if (!$this->scopeConfig->getValue(self::CONFIG_SEPARATE_VAT_FIELDS_PATH, ScopeInterface::SCOPE_STORE)) {
             return $jsLayout;
         }
 
@@ -170,7 +170,7 @@ class ModifyCheckoutLayoutPlugin
 
         $shippingAddressChildren['vat-information'] = [
             'component' => 'Magento_Ui/js/form/components/fieldset',
-            'label' => 'koji je ovo',
+            'label' => __('Commercial invoice details'),
             'children' => []
         ];
         $vatInformationChildren = &$shippingAddressChildren['vat-information']['children'];
