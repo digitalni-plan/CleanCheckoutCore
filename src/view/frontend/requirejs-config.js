@@ -5,6 +5,9 @@
 var config = {
     config: {
         mixins: {
+            'mage/validation': {
+                'Rubic_CleanCheckout/js/mixin/validation-mixin': true,
+            },
             'Magento_Checkout/js/view/shipping': {
                 'Rubic_CleanCheckout/js/mixin/shipping-mixin': true
             },
